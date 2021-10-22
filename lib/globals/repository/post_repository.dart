@@ -1,25 +1,19 @@
-import 'package:api_integration/globals/constants/api_constants.dart';
+import 'package:api_integration/globals/api/post_api_service.dart';
 import 'package:api_integration/globals/models/post.dart';
-import 'package:dio/dio.dart';
 
 class PostRepository {
-  Future<List<Post>> getPosts() async {
-    Dio dio = Dio();
-    Response<List> response = await dio.get(ApiConstants.baseUrl + 'posts');
-    if (response.data != null) {
-      return _parsePosts(response.data!);
-    }
-    else
-    {
-      return [];
-    }
+  late PostApiService _postApiService;
+  PostRepository() {
+    _postApiService = PostApiService();
   }
 
-  List<Post> _parsePosts(List data) {
-    List<Post> posts = [];
-    for (int i = 0; i < data.length; i++) {
-      posts.add(Post.fromJson((data[i])));
-    }
+  Future<List<Post>> getPosts() async {
+    List<Post> posts = await _postApiService.getPosts();
     return posts;
+  }
+
+  Future<bool> addPost(Post post) async {
+    bool success = await _postApiService.addPost(post);
+    return success;
   }
 }
