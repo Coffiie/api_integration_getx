@@ -34,7 +34,7 @@ class PostApiService {
     try {
       Response response =
           await _dio.post('${ApiConstants.baseUrl}posts', data: post.toJson());
-      if (response.statusCode == 200) {
+      if (response.data != null) {
         return true;
       } else {
         return false;

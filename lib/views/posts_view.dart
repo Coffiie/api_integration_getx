@@ -13,23 +13,30 @@ class PostsView extends StatelessWidget {
     return Scaffold(
         floatingActionButton: FloatingActionButton(
           child: const Icon(Icons.add),
-          onPressed: () {
+          onPressed: () async {
             //navigate to add post
-            Get.to(const AddPostView());
+            bool refresh = await Get.to<bool>(() => AddPostView()) ?? false;
+            if (refresh) {
+              await _postController.getPosts();
+            }
           },
         ),
-        body: Obx(() => _postController.isLoading.value
-            ? const Center(
-                child: CircularProgressIndicator(),
-              )
-            : ListView.builder(
-                itemCount: _postController.posts.length,
-                itemBuilder: (context, i) => Card(
-                      elevation: 3,
-                      child: ListTile(
-                        title: Text(_postController.posts[i].title),
-                        subtitle: Text(_postController.posts[i].body),
-                      ),
-                    ))));
+        body: RefreshIndicator(
+          onRefresh: () async => await _postController.getPosts(),
+          child: Obx(() => _postController.isLoading.value
+              ? const Center(
+                  child: CircularProgressIndicator(),
+                )
+              : ListView.builder(
+                  itemCount: _postController.posts.length,
+                  itemBuilder: (context, i) => Card(
+                        elevation: 3,
+                        child: ListTile(
+                          onLongPress: () => _postController.showDialog(),
+                          title: Text(_postController.posts[i].title),
+                          subtitle: Text(_postController.posts[i].body),
+                        ),
+                      ))),
+        ));
   }
 }

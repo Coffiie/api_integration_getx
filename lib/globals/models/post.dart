@@ -1,11 +1,11 @@
 class Post {
-  late int id;
+  int? id;
   late String title;
   late String body;
   late int userId;
 
   Post(
-      {required this.id,
+      {this.id,
       required this.title,
       required this.body,
       required this.userId});
