@@ -16,4 +16,9 @@ class PostRepository {
     bool success = await _postApiService.addPost(post);
     return success;
   }
+
+  Future<bool> deletePost(Post post) async{
+    bool success = await _postApiService.deletePost(post);
+    return success;
+  }
 }

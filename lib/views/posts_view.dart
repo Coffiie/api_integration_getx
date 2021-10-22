@@ -27,16 +27,28 @@ class PostsView extends StatelessWidget {
               ? const Center(
                   child: CircularProgressIndicator(),
                 )
-              : ListView.builder(
-                  itemCount: _postController.posts.length,
-                  itemBuilder: (context, i) => Card(
-                        elevation: 3,
-                        child: ListTile(
-                          onLongPress: () => _postController.showDialog(),
-                          title: Text(_postController.posts[i].title),
-                          subtitle: Text(_postController.posts[i].body),
+              : _postController.posts.isEmpty
+                  ? ListView(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Text('Something went wrong, no posts were loaded'),
+                          ],
                         ),
-                      ))),
+                      ],
+                    )
+                  : ListView.builder(
+                      itemCount: _postController.posts.length,
+                      itemBuilder: (context, i) => Card(
+                            elevation: 3,
+                            child: ListTile(
+                              onLongPress: () => _postController
+                                  .showDialog(_postController.posts[i]),
+                              title: Text(_postController.posts[i].title),
+                              subtitle: Text(_postController.posts[i].body),
+                            ),
+                          ))),
         ));
   }
 }

@@ -1,6 +1,7 @@
 import 'package:api_integration/globals/constants/api_constants.dart';
 import 'package:api_integration/globals/models/post.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 class PostApiService {
   late Dio _dio;
@@ -25,7 +26,10 @@ class PostApiService {
         return [];
       }
     } catch (e) {
-      print('[PostApiService - getPosts() Error] $e');
+      if(kDebugMode)
+      {
+        print('[PostApiService - getPosts() Error] $e');
+      }
       return [];
     }
   }
@@ -40,7 +44,26 @@ class PostApiService {
         return false;
       }
     } catch (e) {
-      print('[PostApiService - addPost() Error] $e');
+      if (kDebugMode) {
+        print('[PostApiService - addPost() Error] $e');
+      }
+      return false;
+    }
+  }
+
+  Future<bool> deletePost(Post post) async {
+    try {
+      Response response =
+          await _dio.delete('${ApiConstants.baseUrl}posts/${post.id}');
+      if (response.data != null) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('[PostApiService - deletePost() Error] $e');
+      }
       return false;
     }
   }

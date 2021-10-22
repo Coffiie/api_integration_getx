@@ -1,5 +1,6 @@
 import 'package:api_integration/globals/models/post.dart';
 import 'package:api_integration/globals/repository/post_repository.dart';
+import 'package:api_integration/globals/utils/ui_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -38,12 +39,13 @@ class PostController extends GetxController {
       isButtonLoading(false);
       isSaveButtonEnabled(true);
       if (postAdded) {
-        _clearKeyboardFocus(context);
+        UiUtils.clearKeyboardFocus(context);
         Get.back<bool>(result: true);
         Get.snackbar('Yippie', 'Post saved',
             duration: const Duration(seconds: 3));
       } else {
-        Get.snackbar('Woops', 'Due to some reason, post was not saved');
+        Get.snackbar('Woops', 'Due to some reason, post was not saved',
+            duration: const Duration(seconds: 5));
       }
     }
   }
@@ -62,20 +64,20 @@ class PostController extends GetxController {
     return success;
   }
 
-  void showDialog() {
-    Get.defaultDialog(
-        title: 'Are you sure?',
-        content: const Text('Delete this post?'),
-        textConfirm: 'Delete',
-        confirmTextColor: Colors.white,
-        onConfirm: () {
-          //call delete api
-          print('print');
-        },
-        onCancel: () => Get.back());
-  }
+  void showDialog(Post post) =>
+      UiUtils.showDialog(() async => await _handleDelete(post));
 
-  void _clearKeyboardFocus(BuildContext context) {
-    FocusScope.of(context).unfocus();
+  Future<void> _handleDelete(Post post) async {
+    Get.back();
+    isLoading(true);
+    bool hasPostDeleted = await _postRepository.deletePost(post);
+    if (hasPostDeleted) {
+      Get.snackbar('Yippie', 'Post Deleted',
+          duration: const Duration(seconds: 3));
+    } else {
+      Get.snackbar('Woops', 'Due to some reason, post was not saved',
+          duration: const Duration(seconds: 5));
+    }
+    isLoading(false);
   }
 }
