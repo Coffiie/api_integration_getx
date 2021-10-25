@@ -29,7 +29,7 @@ class PostsView extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: const [
-                            Text('Something went wrong, no posts were loaded'),
+                            Text('Something went wrong, no posts were loaded\nSwipe up to refresh'),
                           ],
                         ),
                       ],
