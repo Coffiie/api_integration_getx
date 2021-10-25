@@ -5,10 +5,7 @@ class Post {
   late int userId;
 
   Post(
-      {this.id,
-      required this.title,
-      required this.body,
-      required this.userId});
+      {this.id, required this.title, required this.body, required this.userId});
 
   Post.fromJson(Map<String, dynamic> json) {
     id = json['id'];

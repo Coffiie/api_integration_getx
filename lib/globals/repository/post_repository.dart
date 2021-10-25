@@ -7,18 +7,13 @@ class PostRepository {
     _postApiService = PostApiService();
   }
 
-  Future<List<Post>> getPosts() async {
-    List<Post> posts = await _postApiService.getPosts();
-    return posts;
-  }
+  Future<List<Post>> getPosts() async => await _postApiService.getPosts();
 
-  Future<bool> addPost(Post post) async {
-    bool success = await _postApiService.addPost(post);
-    return success;
-  }
+  Future<bool> addPost(Post post) async => await _postApiService.addPost(post);
 
-  Future<bool> deletePost(Post post) async{
-    bool success = await _postApiService.deletePost(post);
-    return success;
-  }
+  Future<bool> deletePost(Post post) async =>
+      await _postApiService.deletePost(post);
+
+  Future<bool> updatePost(Post post) async =>
+      await _postApiService.updatePost(post);
 }

@@ -6,7 +6,8 @@ import 'package:flutter/foundation.dart';
 class PostApiService {
   late Dio _dio;
   PostApiService() {
-    _dio = Dio();
+    _dio = Dio(BaseOptions(
+        headers: {'Content-type': 'application/json; charset=UTF-8'}));
   }
 
   List<Post> _parsePosts(List data) {
@@ -26,8 +27,7 @@ class PostApiService {
         return [];
       }
     } catch (e) {
-      if(kDebugMode)
-      {
+      if (kDebugMode) {
         print('[PostApiService - getPosts() Error] $e');
       }
       return [];
@@ -63,6 +63,23 @@ class PostApiService {
     } catch (e) {
       if (kDebugMode) {
         print('[PostApiService - deletePost() Error] $e');
+      }
+      return false;
+    }
+  }
+
+  Future<bool> updatePost(Post post) async {
+    try {
+      Response response = await _dio
+          .put('${ApiConstants.baseUrl}posts/${post.id}', data: post.toJson());
+      if (response.data != null) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('[PostApiService - updatePost() Error] $e');
       }
       return false;
     }
