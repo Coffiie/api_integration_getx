@@ -7,7 +7,7 @@ class UiUtils {
   }
 
   static showDialog(Function() onConfirm) {
-     Get.defaultDialog(
+    Get.defaultDialog(
         title: 'Are you sure?',
         content: const Text('Delete this post?'),
         textConfirm: 'Delete',

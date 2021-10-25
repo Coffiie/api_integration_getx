@@ -1,5 +1,4 @@
 import 'package:api_integration/controllers/post_controller.dart';
-import 'package:api_integration/views/add_post_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -15,10 +14,7 @@ class PostsView extends StatelessWidget {
           child: const Icon(Icons.add),
           onPressed: () async {
             //navigate to add post
-            bool refresh = await Get.to<bool>(() => AddPostView()) ?? false;
-            if (refresh) {
-              await _postController.getPosts();
-            }
+            await _postController.navigateToAddPost(false);
           },
         ),
         body: RefreshIndicator(
@@ -43,6 +39,9 @@ class PostsView extends StatelessWidget {
                       itemBuilder: (context, i) => Card(
                             elevation: 3,
                             child: ListTile(
+                              onTap: () async =>
+                                  _postController.navigateToAddPost(true,
+                                      post: _postController.posts[i]),
                               onLongPress: () => _postController
                                   .showDialog(_postController.posts[i]),
                               title: Text(_postController.posts[i].title),

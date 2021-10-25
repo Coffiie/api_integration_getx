@@ -1,10 +1,14 @@
 import 'package:api_integration/controllers/post_controller.dart';
+import 'package:api_integration/globals/models/post.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class AddPostView extends StatelessWidget {
-  AddPostView({Key? key}) : super(key: key);
+class AddOrUpdatePostView extends StatelessWidget {
+  AddOrUpdatePostView({Key? key, required this.isUpdate, this.post})
+      : super(key: key);
 
+  late final Post? post;
+  late final bool isUpdate;
   final PostController _postController = Get.find<PostController>();
   final TextEditingController _titleTextController = TextEditingController();
   final TextEditingController _descriptionTextController =
@@ -12,17 +16,26 @@ class AddPostView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (isUpdate) {
+      _titleTextController.text = post!.title;
+      _descriptionTextController.text = post!.body;
+    }
     _postController.isSaveButtonEnabled.value = false;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Post'),
+        title: Text(isUpdate ? 'Update Post' : 'Add Post'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(children: [
           TextFormField(
               onChanged: (String val) {
-                _postController.validate(val, _descriptionTextController.text);
+                isUpdate
+                    ? _postController.validatePost(
+                        val, _descriptionTextController.text, post!)
+                    : _postController.validate(
+                        val, _descriptionTextController.text);
               },
               controller: _titleTextController,
               decoration: const InputDecoration(
@@ -32,7 +45,10 @@ class AddPostView extends StatelessWidget {
           ),
           TextFormField(
             onChanged: (String val) {
-              _postController.validate(_descriptionTextController.text, val);
+              isUpdate
+                  ? _postController.validatePost(
+                      _titleTextController.text, val, post!)
+                  : _postController.validate(_titleTextController.text, val);
             },
             controller: _descriptionTextController,
             maxLines: 5,
@@ -50,16 +66,18 @@ class AddPostView extends StatelessWidget {
                                 await _postController.handleSave(
                                     _titleTextController.text,
                                     _descriptionTextController.text,
-                                    context);
+                                    context,
+                                    isUpdate,
+                                    post: post);
                               }
                             : null,
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: _postController.isButtonLoading.value
                               ? const CircularProgressIndicator()
-                              : const Text(
-                                  'Save',
-                                  style: TextStyle(fontSize: 16),
+                              : Text(
+                                  isUpdate ? 'Update' : 'Save',
+                                  style: const TextStyle(fontSize: 16),
                                 ),
                         ))),
               )
