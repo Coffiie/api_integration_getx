@@ -101,7 +101,8 @@ class PostController extends GetxController {
     isLoading(false);
   }
 
-  Future<void> navigateToAddPost(bool isUpdate, {Post? post}) async {
+  Future<void> navigateToAddOrUpdatePostView(bool isUpdate,
+      {Post? post}) async {
     bool refresh = await Get.to<bool>(() => AddOrUpdatePostView(
               isUpdate: isUpdate,
               post: post,

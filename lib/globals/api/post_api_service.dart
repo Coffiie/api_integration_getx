@@ -7,6 +7,7 @@ class PostApiService {
   late Dio _dio;
   PostApiService() {
     _dio = Dio(BaseOptions(
+        baseUrl: ApiConstants.baseUrl,
         headers: {'Content-type': 'application/json; charset=UTF-8'}));
   }
 
@@ -20,7 +21,7 @@ class PostApiService {
 
   Future<List<Post>> getPosts() async {
     try {
-      Response<List> response = await _dio.get('${ApiConstants.baseUrl}posts');
+      Response<List> response = await _dio.get('posts');
       if (response.data != null) {
         return _parsePosts(response.data!);
       } else {
@@ -36,8 +37,7 @@ class PostApiService {
 
   Future<bool> addPost(Post post) async {
     try {
-      Response response =
-          await _dio.post('${ApiConstants.baseUrl}posts', data: post.toJson());
+      Response response = await _dio.post('posts', data: post.toJson());
       if (response.data != null) {
         return true;
       } else {
@@ -53,8 +53,7 @@ class PostApiService {
 
   Future<bool> deletePost(Post post) async {
     try {
-      Response response =
-          await _dio.delete('${ApiConstants.baseUrl}posts/${post.id}');
+      Response response = await _dio.delete('posts/${post.id}');
       if (response.data != null) {
         return true;
       } else {
@@ -70,8 +69,8 @@ class PostApiService {
 
   Future<bool> updatePost(Post post) async {
     try {
-      Response response = await _dio
-          .put('${ApiConstants.baseUrl}posts/${post.id}', data: post.toJson());
+      Response response =
+          await _dio.put('posts/${post.id}', data: post.toJson());
       if (response.data != null) {
         return true;
       } else {
