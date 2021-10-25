@@ -14,7 +14,7 @@ class PostsView extends StatelessWidget {
           child: const Icon(Icons.add),
           onPressed: () async {
             //navigate to add post
-            await _postController.navigateToAddPost(false);
+            await _postController.navigateToAddOrUpdatePostView(false);
           },
         ),
         body: RefreshIndicator(
@@ -39,8 +39,8 @@ class PostsView extends StatelessWidget {
                       itemBuilder: (context, i) => Card(
                             elevation: 3,
                             child: ListTile(
-                              onTap: () async =>
-                                  _postController.navigateToAddPost(true,
+                              onTap: () async => _postController
+                                  .navigateToAddOrUpdatePostView(true,
                                       post: _postController.posts[i]),
                               onLongPress: () => _postController
                                   .showDialog(_postController.posts[i]),
